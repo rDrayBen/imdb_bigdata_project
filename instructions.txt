@@ -1,0 +1,2 @@
+docker buildx build -t my-spark-img .
+docker run my-spark-img
