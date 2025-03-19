@@ -1,0 +1,11 @@
+docker buildx build -t my-spark-img .
+docker run -p 8888:8888 -v $(pwd):/app my-spark-img # if running for .ipynb files
+docker run -p 8888:8888 -v $(pwd):/app my-spark-img python3 main.py # if running for .py files
+
+
+Работягов: principals
+Ратушняк: name.basics
+Слободян: episode
+Уфімцева: akas
+Долинська: rating+crew
+Френіс: title.basics
