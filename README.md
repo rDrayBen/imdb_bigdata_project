@@ -62,3 +62,28 @@
 6. Знайти n найкращих режисерів для кожного десятиліття за середнім рейтингом у визначених жанрах.  
    - Таблиці: title.basics, title.crew, title.ratings  
    - Операції: join, group by, filter
+
+**Ратушняк**
+1. Які актори найчастіше знімаються у фільмах жанру "Action" з рейтингом понад 8.0 та мінімум 5000 голосів?
+    Таблиці: name.basics, title.principals, title.basics, title.ratings
+    Операції: filter, join, group by
+
+2. Визначити топ-10 письменників за кількістю написаних серій у телесеріалах з жанром "Drama".
+    Таблиці: name.basics, title.crew, title.basics, title.episode
+    Операції: filter, join, group by
+
+3. Які актори мають найбільшу кількість фільмів, перекладених більш ніж на 10 мов (із title.akas)?
+    Таблиці: name.basics, title.principals, title.akas
+    Операції: filter, join, group by
+
+4. Які сценаристи писали сценарії для фільмів, що мають оцінку нижче 5.0, але отримали понад 10,000 голосів?
+    Таблиці: name.basics, title.crew, title.ratings
+    Операції: filter, join, group by
+
+5. Які професії (primaryProfession) у людей найчастіше зустрічаються у короткометражних фільмах (titleType='short')?
+    Таблиці: name.basics, title.principals, title.basics
+    Операції: filter, join, group by
+
+6. Які сценаристи мали найдовшу серію послідовних років із щонайменше одним випущеним фільмом?
+    Таблиці: name.basics, title.crew, title.basics
+    Операції: join, filter, group by, window
