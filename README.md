@@ -108,3 +108,23 @@
 * Які фільми мають найбільше перекладів їх назви?
    - Таблиці: 'title.akas'
    - Операції: group by, count
+
+ **Долинська**
+1. Фільми яких країн мають найвищу середню оцінку?
+   - Таблиці: title.basics, title.ratings
+   - Операції: join, group by, filters, order by
+2. Які фільми оцінила найбільша кількість користувачів?
+   - Таблиці: title.basics, title.ratings
+   - Операції: join, order by
+3. Режисери, фільми яких мають найвищу середню оцінку
+   - Таблиці: title.crew, title.ratings
+   - Операції: join, group by, order by
+4. Як змінювалося середня оцінка для усіх фільмів для кожного режисера протягом останніх 10-ти років? 
+   - Таблиці: title.crew, title.basics, title.ratings
+   - Операції: join, group by, window functions, filters, order by
+5. Які жанри мають найвищий середній рейтинг (середня оцінка)?
+   - Таблиці: title.ratings, title.basics
+   - Операції: join, group by, order by, filters
+6. Які актори найчастіше з’являються у найрейтинговіших фільмах (за середньою оцінкою)? 
+   - Таблиці: title.ratings, title.principals
+   - Операції: join, group by, order by, filters
