@@ -4,6 +4,22 @@ from pyspark.sql.functions import udf, col, sum
 
 
 def title_akas_extract_transform(spark, dataset_path):
+    """
+     Reads, cleans, and transforms the IMDb title.akas dataset.
+     Args:
+         spark (SparkSession): The active Spark session.
+         dataset_path (str): The path to the IMDb title.akas.tsv dataset.
+
+     Returns:
+         DataFrame: A cleaned and transformed Spark DataFrame with the following columns:
+             - titleId (str): A tconst, an alphanumeric unique identifier of the title.
+             - ordering (int): A number to uniquely identify rows for a given titleId.
+             - title (str): The localized title.
+             - region (str): The region for this version of the title or "Unknown".
+             - language (str): The language of the title or "Unknown".
+             - isOriginalTitle (int): Indicates whether it is the original title (1) or not (0).
+             - country (str): Full country name (derived from the region).
+     """
     def get_country_name(region_code):
         try:
             country = pycountry.countries.get(alpha_2=region_code)
