@@ -17,7 +17,7 @@ def main():
     title_akas = spark.read.csv("data/title.akas.cleaned.tsv", sep="\t", header=True,
                                 inferSchema=True)
 
-    df = compute_language_rating_trends(spark, title_basics, title_ratings, title_akas)
+    df = compute_language_rating_trends(title_basics, title_ratings, title_akas)
     df.show()
 
 
