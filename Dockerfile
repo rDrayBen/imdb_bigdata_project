@@ -19,6 +19,9 @@ RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION} jupyter
 # Set working directory
 WORKDIR /app
 
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
 # Copy project files
 COPY . .
 
