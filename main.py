@@ -15,4 +15,4 @@ def main():
     query_rabotiahov(title_principals_df)
 
 if __name__ == '__main__':
-    main()
+  main()
