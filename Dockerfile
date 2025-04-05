@@ -28,6 +28,6 @@ COPY . .
 # Expose Jupyter port
 EXPOSE 8888
 
-# Default command: Allow switching between Jupyter and Python scripts
+# Default command: Allow running either Jupyter Notebook or Python scripts
 ENTRYPOINT ["bash", "-c"]
 CMD ["jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root"]
