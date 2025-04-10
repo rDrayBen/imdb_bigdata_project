@@ -3,28 +3,46 @@ from pyspark.sql import SparkSession
 from data_preparation.name_basics_extract_transform import name_basics_extract_transform
 
 from business_queries.query_ratushniak import count_actors_in_low_rated_popular_films
+from business_queries.query_slobodian import high_rated_films_associated_actors
 
 def main():
     spark = SparkSession.builder \
         .appName("IMDB Data Analysis") \
+        .config("spark.driver.memory", "4g") \
         .getOrCreate()
     
+    print("Driver Memory:", spark.sparkContext._conf.get("spark.driver.memory"))
+    
     # Load and transform data
-    name_basics_data_path = "data/name.basics.tsv"
+    name_basics_data_path = "./app/data/name.basics.tsv"
+    title_akas_path = "./app/data/title.akas.tsv"
+    title_ratings_path = "./app/data/title.ratings.tsv"
+    title_principals_path = "./app/data/title.principals.tsv"
+    name_basics_path = "./app/data/name.basics.tsv"
+    
     name_basics_df = name_basics_extract_transform(spark, name_basics_data_path)
 
     # Perform business queries
-    actors_in_low_rated_popular_films = count_actors_in_low_rated_popular_films(
+    actors_in_low_rated_popular_films_df = count_actors_in_low_rated_popular_films(
         title_ratings_df, 
-        title_principals_df, 
+        title_principals_df,
         name_basics_df, 
         average_rating=5.0, 
         top_n=5000
     )
 
     print("Count actors in low rated popular films")
-    print(f"Total rows in resulting dataframe: {actors_in_low_rated_popular_films.count()}")
-    actors_in_low_rated_popular_films.show(truncate=False, n=20)
-
-if __name__ == '__main__':
-    main()
+    print(f"Total rows in resulting dataframe: {actors_in_low_rated_popular_films_df.count()}")
+    actors_in_low_rated_popular_films_df.show(truncate=False, n=20)
+    
+    high_rated_films_associated_actors_df = high_rated_films_associated_actors(
+        title_akas_df, 
+        title_ratings_df, 
+        title_principals_df, 
+        name_basics_df, 
+        top_n=100
+    )
+    
+    print("High rated films associated actors")
+    print(f"Total rows in resulting dataframe: {high_rated_films_associated_actors_df.count()}")
+    high_rated_films_associated_actors_df.show(truncate=False, n=20)
