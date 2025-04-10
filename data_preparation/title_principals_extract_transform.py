@@ -1,8 +1,8 @@
-from pyspark.sql.functions import col, lit, when
+from pyspark.sql.functions import col, when
 from pyspark.sql.types import IntegerType, StringType, StructType, StructField
 
 
-def title_principals_extract_and_transform(spark, data_path: str):
+def title_principals_extract_transform(spark, data_path: str):
     schema = StructType([
         StructField("tconst", StringType(), True),
         StructField("ordering", IntegerType(), True),
