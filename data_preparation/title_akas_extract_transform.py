@@ -52,7 +52,6 @@ def title_akas_extract_transform(spark, dataset_path):
 
     df = df.withColumn("country",
                                       get_country_name_udf(df["region"]))
-    df = df.fillna({"country": "Unknown"})
 
     enforced_schema = StructType([
         StructField("titleId", StringType(), False),
