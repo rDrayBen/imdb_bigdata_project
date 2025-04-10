@@ -85,5 +85,8 @@ def top_comedy_movies_after_2010(title_basics: DataFrame, title_ratings: DataFra
     )
 
     final_movies_sorted = final_movies.orderBy(F.col("averageRating").desc())
+    
+    final_movies_sorted = final_movies_sorted.withColumn("languages", F.concat_ws(",", F.col("languages")))
+    final_movies_sorted = final_movies_sorted.withColumn("genres", F.concat_ws(",", F.col("genres")))
 
     return final_movies_sorted
