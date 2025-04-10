@@ -19,4 +19,4 @@ def main():
     df = compute_language_rating_trends(title_basics, title_ratings, title_akas_df)
     df.show()
 if __name__ == '__main__':
-    main()
+  main()
