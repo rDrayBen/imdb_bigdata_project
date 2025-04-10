@@ -1,6 +1,7 @@
 docker buildx build -t my-spark-img .
 docker run -p 8888:8888 -v $(pwd):/app my-spark-img # if running for .ipynb files
-docker run -p 8888:8888 -v $(pwd):/app my-spark-img python3 main.py # if running for .py files
+docker run -it -v $(pwd):/app my-spark-img /bin/bash # enter container if running for .py files then run "python main.py"
+
 
 
 Работягов: principals
