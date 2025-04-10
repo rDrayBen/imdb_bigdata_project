@@ -10,7 +10,7 @@ def round_to_5_years(year_col):
     return floor(col(year_col) / 5) * 5
 
 
-def query_dolynska(spark: SparkSession, top_n: int, title_crew, title_basics, title_ratings):
+def compute_director_career_rating_trends(spark: SparkSession, top_n: int, title_crew, title_basics, title_ratings):
     movies = (title_basics
               .filter(col("titleType") == "movie")
               .withColumn("startYear", substring("startYear", 1, 4).cast("int"))
