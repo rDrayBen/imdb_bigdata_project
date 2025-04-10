@@ -19,7 +19,7 @@ from business_queries.query_ufimtseva import compute_language_rating_trends
 def main():
     spark = SparkSession.builder \
         .appName("IMDB Data Analysis") \
-        .config("spark.driver.memory", "4g") \
+        .config("spark.driver.memory", "12g") \
         .getOrCreate()
     
     spark.sparkContext.setLogLevel("ERROR")
@@ -27,13 +27,13 @@ def main():
     print("Driver Memory:", spark.sparkContext._conf.get("spark.driver.memory"))
     
     # Load and transform data
-    name_basics_path = "./app/data/name.basics.tsv"
-    title_akas_path = "./app/data/title.akas.tsv"
-    title_basics_path = "./app/data/title.basics.tsv"
-    title_crew_path = "./app/data/title.crew.tsv"
-    title_episode_path = "./app/data/title.episode.tsv"
-    title_principals_path = "./app/data/title.principals.tsv"
-    title_ratings_path = "./app/data/title.ratings.tsv"
+    name_basics_path = "data/name.basics.tsv"
+    title_akas_path = "data/title.akas.tsv"
+    title_basics_path = "data/title.basics.tsv"
+    title_crew_path = "data/title.crew.tsv"
+    title_episode_path = "data/title.episode.tsv"
+    title_principals_path = "data/title.principals.tsv"
+    title_ratings_path = "data/title.ratings.tsv"
 
     name_basics_df = name_basics_extract_transform(spark, name_basics_path)
     title_akas_df = title_akas_extract_transform(spark, title_akas_path)
@@ -44,6 +44,7 @@ def main():
     title_ratings_df = title_ratings_extract_transform(spark, title_ratings_path)
 
     # Perform business queries
+    print("Count actors in low rated popular films")
     actors_in_low_rated_popular_films_df = count_actors_in_low_rated_popular_films(
         title_ratings_df, 
         title_principals_df,
@@ -51,11 +52,15 @@ def main():
         average_rating=5.0, 
         top_n=5000
     )
-    print("Count actors in low rated popular films")
     print(f"Total rows in resulting dataframe: {actors_in_low_rated_popular_films_df.count()}")
     actors_in_low_rated_popular_films_df.show(truncate=False, n=20)
+    actors_in_low_rated_popular_films_df.write\
+        .option("header", "true")\
+        .mode("overwrite")\
+        .csv("query_results/actors_in_low_rated_popular_films")
 
     
+    print("High rated films associated actors")
     high_rated_films_associated_actors_df = high_rated_films_associated_actors(
         title_akas_df, 
         title_ratings_df, 
@@ -63,48 +68,70 @@ def main():
         name_basics_df, 
         top_n=100
     )
-    print("High rated films associated actors")
     print(f"Total rows in resulting dataframe: {high_rated_films_associated_actors_df.count()}")
-    high_rated_films_associated_actors_df.show(truncate=False, n=20)
+    # high_rated_films_associated_actors_df.show(truncate=False, n=20)
+    high_rated_films_associated_actors_df.write\
+        .option("header", "true")\
+        .mode("overwrite")\
+        .csv("query_results/high_rated_films_associated_actors")
 
-   
+    
+    print("Compute language rating trends")
     language_rating_trends_df = compute_language_rating_trends(
         title_basics_df, 
         title_ratings_df, 
         title_akas_df
     )
-    print("Compute language rating trends")
     print(f"Total rows in resulting dataframe: {language_rating_trends_df.count()}")
     language_rating_trends_df.show(truncate=False, n=20)
+    language_rating_trends_df.write\
+        .option("header", "true")\
+        .mode("overwrite")\
+        .csv("query_results/language_rating_trends")
 
-    
+
+    print("Compute director career rating trends")    
     director_career_rating_trends_df = compute_director_career_rating_trends(
         spark, 
-        25, 
+        10, 
         title_crew_df, 
         title_basics_df, 
         title_ratings_df
     )
-    print("Compute director career rating trends")
     print(f"Total rows in resulting dataframe: {director_career_rating_trends_df.count()}")
     director_career_rating_trends_df.show(truncate=False, n=20)
+    director_career_rating_trends_df.write\
+        .option("header", "true")\
+        .mode("overwrite")\
+        .csv("query_results/director_career_rating_trends")
 
 
+    print("Compute top genres average rating over decades")
     top_genres_average_rating_over_decades_df = top_genres_average_rating_over_decades(
         title_basics_df,
         title_ratings_df, 
         top_n=5
     )
-    print("Compute top genres average rating over decades")
     print(f"Total rows in resulting dataframe: {top_genres_average_rating_over_decades_df.count()}")
     top_genres_average_rating_over_decades_df.show(truncate=False, n=20)
+    top_genres_average_rating_over_decades_df.write\
+        .option("header", "true")\
+        .mode("overwrite")\
+        .csv("query_results/top_genres_average_rating_over_decades")
     
-    
-    top_5_comedy_movies_df = top_comedy_movies_after_2010(
+
+    print("Compute top comedy movies after 2010")    
+    top_comedy_movies_df = top_comedy_movies_after_2010(
         title_basics_df, 
         title_ratings_df,
         title_akas_df
     )
-    print("Compute top 5 comedy movies after 2010")
-    print(f"Total rows in resulting dataframe: {top_5_comedy_movies_df.count()}")
-    top_5_comedy_movies_df.show(truncate=False, n=20)
+    print(f"Total rows in resulting dataframe: {top_comedy_movies_df.count()}")
+    top_comedy_movies_df.show(truncate=False, n=20)
+    top_comedy_movies_df.write\
+        .option("header", "true")\
+        .mode("overwrite")\
+        .csv("query_results/top_comedy_movies")
+
+if __name__ == "__main__":
+    main()

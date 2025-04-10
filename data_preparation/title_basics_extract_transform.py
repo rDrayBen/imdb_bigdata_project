@@ -53,13 +53,13 @@ def title_basics_extract_transform(spark, dataset_path):
     df = df.withColumn(
         "startYear",
         F.when(F.col("startYear") == "\\N", None)
-        .otherwise(F.col("startYear").cast(t.IntegerType()))
+        .otherwise(F.col("startYear").cast(t.DateType()))
     )
 
     df = df.withColumn(
         "endYear",
         F.when(F.col("endYear") == "\\N", None)
-        .otherwise(F.col("endYear").cast(t.IntegerType()))
+        .otherwise(F.col("endYear").cast(t.DateType()))
     )
 
     df = df.withColumn(
