@@ -8,8 +8,8 @@ from data_preparation.title_episode_extract_transform import title_episode_extra
 from data_preparation.title_principals_extract_transform import title_principals_extract_transform
 from data_preparation.title_ratings_extract_transform import title_ratings_extract_transform
 
-
 from business_queries.query_dolynska import query_dolynska
+from business_queries.query_frenis import top_comedy_movies_after_2010
 from business_queries.query_rabotiahov import top_genres_average_rating_over_decades
 from business_queries.query_ratushniak import count_actors_in_low_rated_popular_films
 from business_queries.query_slobodian import high_rated_films_associated_actors
@@ -94,3 +94,12 @@ def main():
     print("Compute top genres average rating over decades")
     print(f"Total rows in resulting dataframe: {top_genres_average_rating_over_decades_df.count()}")
     top_genres_average_rating_over_decades_df.show(truncate=False, n=20)
+    
+    top_5_comedy_movies_df = top_comedy_movies_after_2010(
+        title_basics, 
+        title_ratings,
+        title_akas
+    )
+    print("Compute top 5 comedy movies after 2010")
+    print(f"Total rows in resulting dataframe: {top_5_comedy_movies_df.count()}")
+    top_5_comedy_movies_df.show(truncate=False, n=20)
