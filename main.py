@@ -15,8 +15,8 @@ def main():
         "./title.akas.cleaned.tsv", sep="\t", header=True, inferSchema=True
     )
 
-    top_5_movies = top_comedy_movies_after_2010(title_basics, title_ratings, title_akas)
-    print(top_5_movies.show())
+    top_5_comedy_movies = top_comedy_movies_after_2010(title_basics, title_ratings, title_akas)
+    print(top_5_comedy_movies.show())
 
 if __name__ == "__main__":
     main()
