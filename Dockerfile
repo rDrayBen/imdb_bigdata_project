@@ -19,12 +19,15 @@ RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION} jupyter
 # Set working directory
 WORKDIR /app
 
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
 # Copy project files
 COPY . .
 
 # Expose Jupyter port
 EXPOSE 8888
 
-# Default command: Allow switching between Jupyter and Python scripts
+# Default command: Allow running either Jupyter Notebook or Python scripts
 ENTRYPOINT ["bash", "-c"]
 CMD ["jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root"]
