@@ -1,5 +1,5 @@
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
-# import pycountry
+import pycountry
 from pyspark.sql.functions import udf, col, sum
 
 
@@ -20,15 +20,15 @@ def title_akas_extract_transform(spark, dataset_path):
              - isOriginalTitle (int): Indicates whether it is the original title (1) or not (0).
              - country (str): Full country name (derived from the region).
      """
-    # def get_country_name(region_code):
-    #     try:
-    #         country = pycountry.countries.get(alpha_2=region_code)
-    #         if country:
-    #             return country.name
-    #         else:
-    #             return region_code
-    #     except Exception as e:
-    #         return region_code
+    def get_country_name(region_code):
+        try:
+            country = pycountry.countries.get(alpha_2=region_code)
+            if country:
+                return country.name
+            else:
+                return region_code
+        except Exception as e:
+            return region_code
 
     schema = StructType([
         StructField("titleId", StringType(), True),
@@ -48,11 +48,9 @@ def title_akas_extract_transform(spark, dataset_path):
     df = df.fillna({"region": "Unknown", "language": "Unknown"})
     df = df.replace("\\N", "Unknown", subset=["region", "language"])
 
-    # get_country_name_udf = udf(get_country_name, StringType())
+    get_country_name_udf = udf(get_country_name, StringType())
 
-    # df = df.withColumn("country",
-                                    #   get_country_name_udf(df["region"]))
-    # df = df.fillna({"country": "Unknown"})
+    df = df.withColumn("country", get_country_name_udf(df["region"]))
 
     enforced_schema = StructType([
         StructField("titleId", StringType(), False),
@@ -61,9 +59,8 @@ def title_akas_extract_transform(spark, dataset_path):
         StructField("region", StringType(), False),
         StructField("language", StringType(), False),
         StructField("isOriginalTitle", IntegerType(), False),
-        # StructField("country", StringType(), False)
+        StructField("country", StringType(), False)
     ])
 
     df = spark.createDataFrame(df.rdd, schema=enforced_schema)
     return df
-

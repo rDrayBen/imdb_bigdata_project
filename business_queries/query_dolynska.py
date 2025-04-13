@@ -10,7 +10,7 @@ def round_to_5_years(year_col):
     return floor(col(year_col) / 5) * 5
 
 
-def query_dolynska(spark: SparkSession, top_n: int, title_crew, title_basics, title_ratings):
+def compute_director_career_rating_trends(spark: SparkSession, top_n: int, title_crew, title_basics, title_ratings):
     movies = (title_basics
               .filter(col("titleType") == "movie")
               .withColumn("startYear", substring("startYear", 1, 4).cast("int"))
@@ -37,18 +37,6 @@ def query_dolynska(spark: SparkSession, top_n: int, title_crew, title_basics, ti
                         .agg(min("startYear").alias("firstYear"), max("startYear").alias("lastYear")))
 
     director_movies = director_movies.join(first_last_years, "director")
-
-    # first_film_ratings = (director_movies.filter(col("startYear") == col("firstYear"))
-    #                       .select("director", "averageRating")
-    #                       .withColumnRenamed("averageRating", "firstFilmRating"))
-    #
-    # last_film_ratings = (director_movies.filter(col("startYear") == col("lastYear"))
-    #                      .select("director", "averageRating")
-    #                      .withColumnRenamed("averageRating", "lastFilmRating"))
-
-    # director_movies = (director_movies
-    #                    .join(first_film_ratings, "director", "left")
-    #                    .join(last_film_ratings, "director", "left"))
 
     director_movies = director_movies.withColumn("careerPeriod", round_to_5_years("startYear"))
     periodic_avg_ratings = (director_movies
@@ -81,7 +69,6 @@ def query_dolynska(spark: SparkSession, top_n: int, title_crew, title_basics, ti
         )
 
     director_movies_pivoted = director_movies_pivoted.na.fill("-")
-    # director_movies_pivoted.show(n=top_n, truncate=False)
 
     year_columns = director_movies_pivoted.columns[2:]
     long_df = director_movies_pivoted.select(
@@ -96,7 +83,6 @@ def query_dolynska(spark: SparkSession, top_n: int, title_crew, title_basics, ti
     )
 
     pivoted_df = long_df.groupBy('year').pivot('director').agg(F.first('rating'))
-    # pivoted_df.show(len(year_columns), truncate=False)
 
     window_spec = Window.orderBy('year')
     result_df = pivoted_df.select(
@@ -133,5 +119,5 @@ if __name__ == '__main__':
     title_basics = spark.read.csv(title_basics_path, header=True, sep="\t")
     title_ratings = spark.read.csv(title_ratings_path, header=True, sep="\t")
 
-    result_df = query_dolynska(spark, 25, title_crew, title_basics, title_ratings)
+    result_df = compute_director_career_rating_trends(spark, 25, title_crew, title_basics, title_ratings)
     result_df.show(35, truncate=False)
