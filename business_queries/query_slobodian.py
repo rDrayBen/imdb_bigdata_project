@@ -103,26 +103,21 @@ def most_localized_series(
 ) -> DataFrame:
     from pyspark.sql.functions import col, countDistinct
 
-    # Step 1: Filter for TV series
     tv_series_df = title_basics_df.filter(col("titleType") == "tvSeries") \
         .select("tconst", "primaryTitle") \
         .withColumnRenamed("tconst", "series_id")
 
-    # Step 2: Get episode-level titles and map them to series
     episodes_df = title_episode_df.select("tconst", "parentTconst") \
         .withColumnRenamed("parentTconst", "series_id")
 
-    # Step 3: Join episodes to series
     episode_series_df = episodes_df.join(tv_series_df, on="series_id", how="inner")
 
-    # Step 4: Join episodes with akas to get localized titles
     akas_df = title_akas_df.select("titleId", "region") \
         .withColumnRenamed("titleId", "tconst")
 
     localized_titles_df = episode_series_df.join(akas_df, on="tconst", how="inner") \
         .filter(col("region").isNotNull() & (col("region") != "Unknown"))
 
-    # Step 5: Group by series and count unique localized regions
     series_localization_count_df = localized_titles_df.groupBy("series_id", "primaryTitle") \
         .agg(countDistinct("region").alias("num_localizations")) \
         .orderBy(col("num_localizations").desc()) \
@@ -141,12 +136,10 @@ def most_consistent_high_rated_series(
 ) -> DataFrame:
     from pyspark.sql.functions import col, avg, stddev, count, sum as _sum
 
-    # Step 1: Join episodes with their ratings
     episodes_with_ratings_df = title_episode_df.join(
         title_ratings_df, on="tconst", how="inner"
     ).select("parentTconst", "averageRating", "numVotes")
 
-    # Step 2: Group by parentTconst and calculate avg, stddev, count, total_votes
     series_stats_df = episodes_with_ratings_df.groupBy("parentTconst") \
         .agg(
         avg("averageRating").alias("avg_rating"),
@@ -158,7 +151,6 @@ def most_consistent_high_rated_series(
         (col("total_votes") >= min_votes)
     )
 
-    # Step 3: Join with title.basics to get series titles
     result_df = series_stats_df.join(
         title_basics_df.filter(col("titleType") == "tvSeries")
             .select(col("tconst").alias("parentTconst"), col("primaryTitle")),
@@ -166,7 +158,6 @@ def most_consistent_high_rated_series(
         how="inner"
     )
 
-    # Step 4: Order by high avg rating and low stddev
     result_df = result_df.orderBy(col("avg_rating").desc(), col("stddev_rating").asc())
 
     return result_df.limit(top_n)
