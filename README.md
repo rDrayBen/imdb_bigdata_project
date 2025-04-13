@@ -59,7 +59,7 @@
    - Таблиці: title.basics  
    - Операції: filter, group by, window  
 
-6. Знайти n найкращих режисерів для кожного десятиліття за середнім рейтингом у визначених жанрах. + 
+6. Знайти n найкращих режисерів для кожного десятиліття за середнім рейтингом у визначених жанрах для певного регіону. + 
    - Таблиці: title.basics, title.crew, title.ratings  
    - Операції: join, group by, filter
 
@@ -142,20 +142,20 @@
 
 1. Які серіали мають найбільш стабільний високий рейтинг серед своїх епізодів?
     - Таблиці: title.episode, title.basics, title.ratings
-    - SQL-операції: GROUP BY; WINDOW FUNCTIONS; ORDER BY.
+    - операції: GROUP BY; WINDOW FUNCTIONS; ORDER BY.
 2. Які серіали мають найбільшу кількість локалізованих назв, що може вказувати на міжнародний успіх?
     - Таблиці: title.episode, title.basics, title.akas
-    - SQL-операції: GROUP BY; JOIN; ORDER BY.
+    - операції: GROUP BY; JOIN; ORDER BY.
 3. Які режисери найчастіше працюють із тим самим акторським складом у різних серіалах? +
 Назвати людей в яких найбільше спільних проектів
     - Таблиці: title.crew, title.principals, name.basics
-    - SQL-операції: JOIN; GROUP BY; FILTER.
+    - операції: JOIN; GROUP BY; FILTER.
 4. Які серіали мають найбільшу кількість сезонів із негативною динамікою рейтингу?
     - Таблиці: title.episode, title.basics, title.ratings
-    - SQL-операції: WINDOW FUNCTIONS; FILTER.
+    - операції: WINDOW FUNCTIONS; FILTER.
 5. Які серіали мають найбільшу кількість нагородних епізодів? +-
     - Таблиці: title.episode, title.ratings, title.principals
-    - SQL-операції: GROUP BY; FILTER.
+    - операції: GROUP BY; FILTER.
 6. Які жанри серіалів мають найнижчий відсоток завершених проєктів? +-
     - Таблиці: title.episode, title.basics
-    - SQL-операції: GROUP BY; FILTER.
+    - операції: GROUP BY; FILTER.
