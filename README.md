@@ -5,8 +5,8 @@
 Розподіл таблиць:\
 Работягов: title.principals\
 Ратушняк: name.basics\
-Слободян: episode\
-Уфімцева: akas\
+Слободян: title.episode\
+Уфімцева: title.akas\
 Долинська: title.ratings + title.crew\
 Френіс: title.basics
 
