@@ -43,6 +43,7 @@ def count_actors_in_low_rated_popular_films(
             how="left"
         )
         .orderBy(col("film_count").desc())
+        .select("primaryName", "film_count")
     )
     
     return result_df

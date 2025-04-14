@@ -10,7 +10,8 @@ def round_to_5_years(year_col):
     return floor(col(year_col) / 5) * 5
 
 
-def top_n_directors_rating_evolution(spark: SparkSession, top_n: int, title_crew, title_basics, title_ratings, name_basics):
+
+def compute_director_career_rating_trends(spark: SparkSession, top_n: int, title_crew, title_basics, title_ratings, name_basics):
     movies = (title_basics
               .filter(col("titleType") == "movie")
               .withColumn("startYear", substring("startYear", 1, 4).cast("int"))
@@ -42,18 +43,6 @@ def top_n_directors_rating_evolution(spark: SparkSession, top_n: int, title_crew
                         .agg(min("startYear").alias("firstYear"), max("startYear").alias("lastYear")))
 
     director_movies = director_movies.join(first_last_years, "primaryName")
-
-    # first_film_ratings = (director_movies.filter(col("startYear") == col("firstYear"))
-    #                       .select("director", "averageRating")
-    #                       .withColumnRenamed("averageRating", "firstFilmRating"))
-    #
-    # last_film_ratings = (director_movies.filter(col("startYear") == col("lastYear"))
-    #                      .select("director", "averageRating")
-    #                      .withColumnRenamed("averageRating", "lastFilmRating"))
-
-    # director_movies = (director_movies
-    #                    .join(first_film_ratings, "director", "left")
-    #                    .join(last_film_ratings, "director", "left"))
 
     director_movies = director_movies.withColumn("careerPeriod", round_to_5_years("startYear"))
     periodic_avg_ratings = (director_movies
