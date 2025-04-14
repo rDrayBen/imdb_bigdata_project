@@ -84,6 +84,7 @@ def main():
     )
     print(f"Total rows in resulting dataframe: {language_rating_trends_df.count()}")
     language_rating_trends_df.show(truncate=False, n=20)
+
     language_rating_trends_df.write\
         .option("header", "true")\
         .mode("overwrite")\
@@ -96,8 +97,10 @@ def main():
         10, 
         title_crew_df, 
         title_basics_df, 
-        title_ratings_df
+        title_ratings_df,
+        name_basics_df
     )
+
     print(f"Total rows in resulting dataframe: {director_career_rating_trends_df.count()}")
     director_career_rating_trends_df.show(truncate=False, n=20)
     director_career_rating_trends_df.write\
