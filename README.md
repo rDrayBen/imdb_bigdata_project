@@ -7,7 +7,7 @@
 Ратушняк: name.basics\
 Слободян: episode\
 Уфімцева: akas\
-Долинська: rating+crew\
+Долинська: title.ratings + title.crew\
 Френіс: title.basics
 
 
