@@ -60,7 +60,7 @@ filter: 3 -> 5\
 join: 2 -> 6\
 group by: 2 -> 5\
 order by: _ -> 6\
-window function: 2 -> 3\
+window function: 2 -> 3
 
 
 **Слободян**
