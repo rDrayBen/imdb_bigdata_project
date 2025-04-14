@@ -5,7 +5,7 @@ from data_preparation.title_akas_extract_transform import title_akas_extract_tra
 from data_preparation.title_crew_extract_transform import title_crew_extract_transform
 from data_preparation.title_ratings_extract_transform import title_ratings_extract_transform
 
-from business_queries.query_dolynska import query_dolynska
+from business_queries.query_dolynska import top_n_directors_rating_evolution
 from business_queries.query_ratushniak import count_actors_in_low_rated_popular_films
 from business_queries.query_slobodian import high_rated_films_associated_actors
 from business_queries.query_ufimtseva import compute_language_rating_trends
@@ -63,13 +63,14 @@ def main():
     print(f"Total rows in resulting dataframe: {language_rating_trends_df.count()}")
     language_rating_trends_df.show(truncate=False, n=20)
     
-    query_dolynska_result_df = query_dolynska(
+    query_dolynska_result_df = top_n_directors_rating_evolution(
         spark, 
-        25, 
+        10,
         title_crew_df, 
         title_basics_df, 
-        title_ratings_df
+        title_ratings_df,
+        name_basics_df
     )
-    print("Compute") # Todo: denys change naming
+    print("Compute")  # Todo: denys change naming
     print(f"Total rows in resulting dataframe: {query_dolynska_result_df.count()}")
     query_dolynska_result_df.show(truncate=False, n=20)
