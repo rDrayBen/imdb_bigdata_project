@@ -5,8 +5,8 @@ from pyspark.sql import DataFrame
 
 def top_comedy_movies_after_2010(title_basics: DataFrame, title_ratings: DataFrame, title_akas: DataFrame):
     """
-    Computes the top 5 comedy movies released after 2010 based on average rating,
-    excluding russian adaptations.
+    Computes the top comedy movies released after 2010 based on average rating,
+    excluding german adaptations.
 
     Args:
         title_basics (DataFrame): 
@@ -44,9 +44,9 @@ def top_comedy_movies_after_2010(title_basics: DataFrame, title_ratings: DataFra
         .filter(F.array_contains(F.col("genres"), "Comedy"))
     )
     
-    russian_adaptations = title_akas.filter((F.col("language") == "ru")) 
-    filtered_movies = filtered_movies.join(russian_adaptations, 
-                                           filtered_movies.tconst == russian_adaptations.titleId, "leftanti")
+    german_adaptations = title_akas.filter((F.col("language") == "de")) 
+    filtered_movies = filtered_movies.join(german_adaptations, 
+                                           filtered_movies.tconst == german_adaptations.titleId, "leftanti")
     
     movies_with_ratings = (
         filtered_movies
