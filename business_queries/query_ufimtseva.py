@@ -86,6 +86,7 @@ def get_titles_by_region(title_akas, title_basics, title_ratings):
     current_year = datetime.now().year
 
     titles = title_akas.filter(
+        (col("isOriginalTitle") == 1) &
         (col("region") != "Unknown")
     ).select("titleId", "region")
 
